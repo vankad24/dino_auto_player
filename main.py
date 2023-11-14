@@ -88,7 +88,7 @@ cv2.namedWindow('Game', cv2.WINDOW_NORMAL)
 
 # dangerous zone settings
 dz_width = 50
-dz_left = 120
+dz_left = 130
 dz_top = 20
 dz_bottom = 10
 dz_mid = dz_left+dz_width//2
@@ -137,7 +137,7 @@ while True:
             else:
                 # cactus
                 # print(get_jump_delay_ratio())
-                time.sleep(.04/ratio)
+                time.sleep(.034/ratio)
 
                 pyautogui.press("space")
                 # print("space")
