@@ -59,7 +59,19 @@ game_height = game_width//5
 
 def get_game_img():
     return binarize(get_part_of_screen(game_x, game_y, game_width, game_height))
-# print(type(game_y))
+
+def get_jump_delay_ratio():
+    min_ratio = .5
+    obstacle = (game[80:130, dz_mid:dz_mid + 150]==0).sum(axis=0)
+    indices = np.where(obstacle > 0)[0]
+    if not indices.size:
+        return min_ratio
+    obstacle_width = np.max(indices) - np.min(indices)
+    result = obstacle_width/25
+    if result < min_ratio:
+        return min_ratio
+    return result
+
 print("Game at:")
 print(game_x, game_y, game_width, game_height)
 
@@ -76,14 +88,10 @@ cv2.namedWindow('Game', cv2.WINDOW_NORMAL)
 
 # dangerous zone settings
 dz_width = 50
-dz_left = 90
+dz_left = 120
 dz_top = 20
 dz_bottom = 10
-# dz_width = 70
-# dz_left = 130
-# dz_top = 20
-# dz_bottom = 10
-
+dz_mid = dz_left+dz_width//2
 
 pressed = False
 start = 0
@@ -92,7 +100,7 @@ time.sleep(.5)
 game = get_game_img()
 while is_game_over():
     pyautogui.press("space")
-    print("need start")
+    print("waiting for start")
     game = get_game_img()
 
 # pyautogui.press("space")
@@ -112,7 +120,7 @@ while True:
     if cv2.pollKey()==7536640 or is_game_over():
         print("shut down")
         print(f"{ratio=}")
-        # plt.imsave("game2.png", game)
+        plt.imsave("game5.png", game)
         cv2.destroyAllWindows()
         break
 
@@ -121,24 +129,28 @@ while True:
 
     if not np.all(dangerous_zone):
         if not pressed:
-            # check if the dino in the air
-            # if np.any(game[85, 57:69]):
-            #     pyautogui.press("down")
-            #     print("down")
-                # time.sleep(.05)
+            if np.all(dangerous_zone[-40:]):
+                # bird
+                pyautogui.keyDown("down")
+                time.sleep(.2 / ratio)
+                pyautogui.keyUp("down")
+            else:
+                # cactus
+                print(get_jump_delay_ratio())
+                time.sleep(.05/ratio)
 
-            pyautogui.press("space")
-            # print("space")
-            time.sleep(.2/ratio)
-            pyautogui.press("down")
+                pyautogui.press("space")
+                # print("space")
+                time.sleep(.2/ratio*get_jump_delay_ratio())
+                pyautogui.press("down")
 
-            # time.sleep(.1)
             pressed = True
     else:
         pressed = False
 
     dz_game = (game * 255).astype("uint8")
     dz_game[dz_top:-dz_bottom, dz_left:dz_left+dz_width]//=2
+    # dz_game[93, dz_mid:dz_mid + 150]//=3
     cv2.imshow('Game', dz_game)
     time.sleep(.05)
 
@@ -146,3 +158,4 @@ while True:
 # 12704 / 762 = 16.6
 
 # (6 + (delta_ms / 16.6) / 1000) / 6
+# 1 + delta_sec / 99.6
