@@ -137,11 +137,11 @@ while True:
             else:
                 # cactus
                 # print(get_jump_delay_ratio())
-                time.sleep(.034/ratio)
+                time.sleep(.03/ratio)
 
                 pyautogui.press("space")
                 # print("space")
-                time.sleep(.2/ratio*get_jump_delay_ratio())
+                time.sleep(.23/ratio*get_jump_delay_ratio())
                 pyautogui.press("down")
 
             pressed = True
@@ -152,7 +152,7 @@ while True:
     dz_game[dz_top:-dz_bottom, dz_left:dz_left+dz_width]//=2
     # dz_game[93, dz_mid:dz_mid + 150]//=3
     cv2.imshow('Game', dz_game)
-    time.sleep(.05)
+    # time.sleep(.03)
 
 # 12704 ms / 6.762
 # 12704 / 762 = 16.6
