@@ -37,6 +37,9 @@ def get_ground_y(img):
 def binarize(img):
     return img[:,:,2] > 83
 
+def is_game_over():
+    return not np.all(game[19, 318:324])
+
 # time.sleep(1)
 img = get_fullscreen()
 # img = (plt.imread("dino.png")*256).astype("uint8")
@@ -81,31 +84,34 @@ dz_bottom = 10
 # dz_top = 20
 # dz_bottom = 10
 
-prev = time.time()
-pressed = False
 
+pressed = False
 start = 0
+time.sleep(.5)
 
 game = get_game_img()
-while game[19, 318]!=0:
+while is_game_over():
+    pyautogui.press("space")
+    print("need start")
     game = get_game_img()
 
-pyautogui.press("space")
-time.sleep(.2)
+# pyautogui.press("space")
 
 start = time.time()
 print("game started")
 
 while True:
-    ratio = 1.0 + (time.time()-start)/99.6
+    ratio = 1 + (time.time()-start)*.8/99.6
+    # ratio = 1
     # print(int((time.time()-prev)*1000))
     # prev = time.time()
 
     game = get_game_img()
 
     # pressed f4 or game over
-    if cv2.pollKey()==7536640 or game[19, 318]==0:
+    if cv2.pollKey()==7536640 or is_game_over():
         print("shut down")
+        print(f"{ratio=}")
         # plt.imsave("game2.png", game)
         cv2.destroyAllWindows()
         break
@@ -122,8 +128,8 @@ while True:
                 # time.sleep(.05)
 
             pyautogui.press("space")
-            print("space")
-            time.sleep(.1)
+            # print("space")
+            time.sleep(.2/ratio)
             pyautogui.press("down")
 
             # time.sleep(.1)
