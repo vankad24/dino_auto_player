@@ -108,8 +108,11 @@ while is_game_over():
 start = time.time()
 print("game started")
 
+max_ratio = 13/6
 while True:
     ratio = 1 + (time.time()-start)/99.6
+    if ratio > max_ratio:
+        ratio = max_ratio
     # ratio = 1
     # print(int((time.time()-prev)*1000))
     # prev = time.time()
@@ -159,3 +162,6 @@ while True:
 
 # (6 + (delta_ms / 16.6) / 1000) / 6
 # 1 + delta_sec / 99.6
+
+# max_speed = 13
+# max_ratio = 13/6
