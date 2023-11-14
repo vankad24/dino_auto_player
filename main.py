@@ -61,7 +61,7 @@ def get_game_img():
     return binarize(get_part_of_screen(game_x, game_y, game_width, game_height))
 
 def get_jump_delay_ratio():
-    min_ratio = .5
+    min_ratio = .55
     obstacle = (game[80:130, dz_mid:dz_mid + 150]==0).sum(axis=0)
     indices = np.where(obstacle > 0)[0]
     if not indices.size:
@@ -109,7 +109,7 @@ start = time.time()
 print("game started")
 
 while True:
-    ratio = 1 + (time.time()-start)*.8/99.6
+    ratio = 1 + (time.time()-start)/99.6
     # ratio = 1
     # print(int((time.time()-prev)*1000))
     # prev = time.time()
@@ -119,7 +119,7 @@ while True:
     # pressed f4 or game over
     if cv2.pollKey()==7536640 or is_game_over():
         print("shut down")
-        print(f"{ratio=}")
+        print(f"{ratio=} speed={ratio*6} time={time.time()-start}")
         plt.imsave("game5.png", game)
         cv2.destroyAllWindows()
         break
@@ -129,15 +129,15 @@ while True:
 
     if not np.all(dangerous_zone):
         if not pressed:
-            if np.all(dangerous_zone[-40:]):
+            if np.all(dangerous_zone[-35:]):
                 # bird
                 pyautogui.keyDown("down")
-                time.sleep(.2 / ratio)
+                time.sleep(.4 / ratio)
                 pyautogui.keyUp("down")
             else:
                 # cactus
-                print(get_jump_delay_ratio())
-                time.sleep(.05/ratio)
+                # print(get_jump_delay_ratio())
+                time.sleep(.04/ratio)
 
                 pyautogui.press("space")
                 # print("space")
