@@ -95,7 +95,7 @@ dz_mid = dz_left+dz_width//2
 
 pressed = False
 start = 0
-time.sleep(.5)
+time.sleep(1)
 
 game = get_game_img()
 while is_game_over():
